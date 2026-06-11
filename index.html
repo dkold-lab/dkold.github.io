@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DKOLD — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red:    #E8193C;
+      --blue:   #1A4FE8;
+      --purple: #7B2FE8;
+      --white:  #F0F0F5;
+      --black:  #0A0A0F;
+      --card:   #1A1A26;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0;
+    }
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 48px;
+      background: rgba(10,10,15,0.7);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700; font-size: 1.2rem;
+      background: linear-gradient(90deg, var(--red), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+    }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a {
+      color: rgba(240,240,245,0.6); text-decoration: none;
+      font-size: 0.9rem; font-weight: 600;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: flex-start;
+      padding: 120px 48px 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero-glow { position: absolute; pointer-events: none; border-radius: 50%; filter: blur(120px); opacity: 0.25; }
+    .glow-red  { width: 500px; height: 500px; background: var(--red);    top: -100px; right: -100px; }
+    .glow-blue { width: 400px; height: 400px; background: var(--blue);   bottom: 0;   left: -80px; }
+    .glow-pur  { width: 300px; height: 300px; background: var(--purple); top: 40%;    right: 20%; }
+    .hero-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem; color: var(--red);
+      letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px;
+    }
+    .hero h1 { font-size: clamp(3rem, 8vw, 6.5rem); font-weight: 700; line-height: 1.0; margin-bottom: 24px; }
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--red) 0%, var(--purple) 50%, var(--blue) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-sub { font-size: 1.15rem; color: rgba(240,240,245,0.55); max-width: 520px; line-height: 1.7; margin-bottom: 40px; }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn {
+      padding: 14px 28px; border-radius: 6px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600; font-size: 0.95rem;
+      text-decoration: none; cursor: pointer; border: none;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+    .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+    .btn-primary { background: linear-gradient(135deg, var(--red), var(--purple)); color: #fff; }
+    .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--white); }
+    section { padding: 100px 48px; position: relative; }
+    .section-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem; color: var(--purple);
+      letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px;
+    }
+    h2 { font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 700; margin-bottom: 48px; }
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+    .skill-card {
+      background: var(--card); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px; padding: 24px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .skill-card:hover { border-color: var(--purple); transform: translateY(-4px); }
+    .skill-icon { font-size: 2rem; margin-bottom: 12px; }
+    .skill-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+    .skill-card p { font-size: 0.82rem; color: rgba(240,240,245,0.45); line-height: 1.5; }
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    .project-card {
+      background: var(--card); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px; padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .project-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--red), var(--purple), var(--blue));
+    }
+    .project-card:hover { border-color: rgba(123,47,232,0.4); transform: translateY(-4px); }
+    .project-lang {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem; color: var(--red);
+      letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;
+    }
+    .project-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+    .project-card p { font-size: 0.85rem; color: rgba(240,240,245,0.5); line-height: 1.6; }
+
+    /* YOUTUBE FEED */
+    .yt-feed { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+    .yt-card {
+      background: var(--card); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px; overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+      cursor: pointer; text-decoration: none; color: inherit;
+      display: block;
+    }
+    .yt-card:hover { transform: translateY(-4px); border-color: rgba(232,25,60,0.4); }
+    .yt-thumb { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; background: #111; }
+    .yt-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .yt-thumb-placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    .yt-play {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      font-size: 1.8rem; color: rgba(255,255,255,0.9);
+      background: rgba(0,0,0,0.5);
+      width: 52px; height: 52px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      padding-left: 4px;
+      transition: background 0.2s;
+      z-index: 2;
+    }
+    .yt-card:hover .yt-play { background: var(--red); }
+    .yt-duration {
+      position: absolute; bottom: 8px; right: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem; font-weight: 700;
+      background: rgba(0,0,0,0.8); color: #fff;
+      padding: 2px 6px; border-radius: 4px; z-index: 2;
+    }
+    .yt-info { padding: 14px 16px 18px; }
+    .yt-title { font-size: 0.92rem; font-weight: 600; line-height: 1.4; margin-bottom: 6px; }
+    .yt-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: rgba(240,240,245,0.4); }
+    .yt-loading {
+      text-align: center; padding: 60px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem; color: rgba(240,240,245,0.4);
+    }
+    .yt-error {
+      text-align: center; padding: 40px 20px;
+      font-size: 0.85rem; color: rgba(232,25,60,0.7);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .yt-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 6px;
+      background: #FF0000; color: #fff;
+      text-decoration: none; font-weight: 600; font-size: 0.9rem;
+      transition: opacity 0.2s;
+    }
+    .yt-link:hover { opacity: 0.85; }
+    .contact-block {
+      background: var(--card); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px; padding: 48px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 24px;
+    }
+    .contact-block h3 { font-size: 1.5rem; font-weight: 700; }
+    .contact-block p { color: rgba(240,240,245,0.5); margin-top: 6px; }
+    .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(123,47,232,0.3), transparent); }
+    footer {
+      padding: 32px 48px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+    }
+    footer p { font-size: 0.82rem; color: rgba(240,240,245,0.3); }
+    @media (max-width: 600px) {
+      nav { padding: 16px 20px; }
+      .nav-links { gap: 16px; }
+      .hero, section { padding-left: 20px; padding-right: 20px; }
+      footer { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">DKOLD</span>
+  <div class="nav-links">
+    <a href="#skills">Скиллы</a>
+    <a href="#projects">Проекты</a>
+    <a href="#youtube">YouTube</a>
+    <a href="#contact">Контакт</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-glow glow-red"></div>
+  <div class="hero-glow glow-blue"></div>
+  <div class="hero-glow glow-pur"></div>
+  <p class="hero-tag">// developer & content creator</p>
+  <h1>Привет,<br>я <span>DKOLD</span></h1>
+  <p class="hero-sub">Делаю игры в Roblox Studio, пишу на Python, снимаю контент на YouTube. Люблю создавать вещи — будь то код или видео.</p>
+  <div class="hero-btns">
+    <a href="#projects" class="btn btn-primary">Мои проекты</a>
+    <a href="#youtube" class="btn btn-outline">YouTube канал</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="skills">
+  <p class="section-tag">// что умею</p>
+  <h2>Навыки</h2>
+  <div class="skills-grid">
+    <div class="skill-card"><div class="skill-icon">🎮</div><h3>Roblox Studio</h3><p>Создаю игры и механики с нуля на платформе Roblox</p></div>
+    <div class="skill-card"><div class="skill-icon">🐍</div><h3>Python</h3><p>Пишу скрипты, боты и разные утилиты</p></div>
+    <div class="skill-card"><div class="skill-icon">💻</div><h3>VS Code</h3><p>Основная среда разработки для всех проектов</p></div>
+    <div class="skill-card"><div class="skill-icon">🎬</div><h3>YouTube</h3><p>Снимаю и монтирую контент для своего канала</p></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="projects">
+  <p class="section-tag">// что делаю</p>
+  <h2>Проекты</h2>
+  <div class="projects-grid">
+    <div class="project-card"><p class="project-lang">Roblox Studio / Lua</p><h3>Игры в Roblox</h3><p>Разрабатываю собственные игры на платформе Roblox — от механик до дизайна уровней.</p></div>
+    <div class="project-card"><p class="project-lang">Python</p><h3>Python проекты</h3><p>Скрипты, автоматизация и разные инструменты написанные на Python в VS Code.</p></div>
+    <div class="project-card"><p class="project-lang">YouTube</p><h3>Контент</h3><p>Видео о разработке, играх и всём интересном на канале DKOLD.</p></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="youtube">
+  <p class="section-tag">// смотри на ютубе</p>
+  <h2>YouTube — DKOLD</h2>
+  <div id="yt-container">
+    <div class="yt-loading">// загружаю видео с канала...</div>
+  </div>
+  <div style="text-align:center; margin-top:32px;">
+    <a class="yt-link" href="https://youtube.com/@DKOLD" target="_blank">▶ Все видео на канале</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="contact">
+  <p class="section-tag">// связаться</p>
+  <h2>Контакт</h2>
+  <div class="contact-block">
+    <div><h3>Хочешь пообщаться?</h3><p>Найди меня на YouTube или Discord</p></div>
+    <a href="https://youtube.com/@DKOLD" target="_blank" class="btn btn-primary">YouTube → DKOLD</a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 DKOLD. Сделано с 🔥</p>
+  <p style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:rgba(240,240,245,0.2)">// dev & creator</p>
+</footer>
+
+<script>
+const API_KEY = 'AIzaSyC8dXurcDMMbK-yqWwSnM-xz1m2avO3ZUE';
+const CHANNEL_HANDLE = 'DKOLD';
+
+function formatDuration(iso) {
+  const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!m) return '';
+  const h = parseInt(m[1]||0), min = parseInt(m[2]||0), sec = parseInt(m[3]||0);
+  if (h > 0) return `${h}:${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  return `${min}:${String(sec).padStart(2,'0')}`;
+}
+
+function formatViews(n) {
+  n = parseInt(n);
+  if (n >= 1000000) return (n/1000000).toFixed(1)+'M';
+  if (n >= 1000) return (n/1000).toFixed(1)+'K';
+  return n;
+}
+
+async function loadVideos() {
+  const container = document.getElementById('yt-container');
+  try {
+    // Get channel ID from handle
+    const searchRes = await fetch(
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${CHANNEL_HANDLE}&type=channel&key=${API_KEY}`
+    );
+    const searchData = await searchRes.json();
+    if (!searchData.items || searchData.items.length === 0) throw new Error('Канал не найден');
+    const channelId = searchData.items[0].id.channelId;
+
+    // Get uploads playlist
+    const channelRes = await fetch(
+      `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${channelId}&key=${API_KEY}`
+    );
+    const channelData = await channelRes.json();
+    const uploadsId = channelData.items[0].contentDetails.relatedPlaylists.uploads;
+
+    // Get videos
+    const playlistRes = await fetch(
+      `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=8&playlistId=${uploadsId}&key=${API_KEY}`
+    );
+    const playlistData = await playlistRes.json();
+    const videoIds = playlistData.items.map(i => i.snippet.resourceId.videoId).join(',');
+
+    // Get durations and stats
+    const statsRes = await fetch(
+      `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,statistics&id=${videoIds}&key=${API_KEY}`
+    );
+    const statsData = await statsRes.json();
+    const statsMap = {};
+    statsData.items.forEach(v => { statsMap[v.id] = v; });
+
+    // Render
+    const feed = document.createElement('div');
+    feed.className = 'yt-feed';
+
+    playlistData.items.forEach(item => {
+      const s = item.snippet;
+      const vid = s.resourceId.videoId;
+      const thumb = s.thumbnails.medium?.url || s.thumbnails.default?.url;
+      const stats = statsMap[vid];
+      const duration = stats ? formatDuration(stats.contentDetails.duration) : '';
+      const views = stats ? formatViews(stats.statistics.viewCount) + ' просмотров' : '';
+
+      const card = document.createElement('a');
+      card.className = 'yt-card';
+      card.href = `https://youtube.com/watch?v=${vid}`;
+      card.target = '_blank';
+      card.innerHTML = `
+        <div class="yt-thumb">
+          <img src="${thumb}" alt="${s.title}" loading="lazy"/>
+          <span class="yt-play">▶</span>
+          ${duration ? `<span class="yt-duration">${duration}</span>` : ''}
+        </div>
+        <div class="yt-info">
+          <p class="yt-title">${s.title}</p>
+          <p class="yt-meta">DKOLD${views ? ' · ' + views : ''}</p>
+        </div>
+      `;
+      feed.appendChild(card);
+    });
+
+    container.innerHTML = '';
+    container.appendChild(feed);
+
+  } catch(e) {
+    container.innerHTML = `<div class="yt-error">// не удалось загрузить видео: ${e.message}</div>`;
+  }
+}
+
+loadVideos();
+</script>
+</body>
+</html>
